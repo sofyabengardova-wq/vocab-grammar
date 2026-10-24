@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixed Test: Travel Grammar & Vocabulary</title>
+    <style>
+        :root {
+            --primary: #34495e;
+            --accent: #2980b9;
+            --bg: #f4f6f8;
+            --text: #2c3e50;
+            --correct: #27ae60;
+            --wrong: #c0392b;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            max-width: 700px;
+            width: 100%;
+        }
+        h1 { text-align: center; color: var(--primary); margin-top: 0; font-size: 1.6rem; margin-bottom: 10px;}
+        .subtitle { text-align: center; color: #7f8c8d; font-size: 1rem; margin-bottom: 30px; }
+        
+        .question-box {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .question-box:last-of-type { border-bottom: none; }
+        
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        .blank {
+            color: var(--accent);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        
+        .option-btn {
+            padding: 12px 15px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            background: white;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            color: var(--text);
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #f0f7fd; }
+        .option-btn.correct { background-color: #e8f8f5; border-color: var(--correct); color: var(--correct); font-weight: bold;}
+        .option-btn.wrong { background-color: #fdedec; border-color: var(--wrong); color: var(--wrong); text-decoration: line-through;}
+        .option-btn:disabled { cursor: default; }
+        
+        .controls { text-align: center; margin-top: 30px; }
+        
+        button.check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            max-width: 300px;
+            font-weight: bold;
+        }
+        button.check-btn:hover { background-color: #2c3e50; }
+        
+        .result-area {
+            text-align: center;
+            display: none;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .result-area h3 { color: var(--primary); font-size: 1.5rem; margin-top: 0;}
+        .result-area p { font-size: 1.1rem; margin-bottom: 20px;}
+        
+        .restart-btn {
+            background-color: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .restart-btn:hover { background-color: #f0f7fd; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mixed Test: Travel Plans</h1>
+    <div class="subtitle">Choose the correct option to complete the sentence.<br><i>(Grammar & Vocabulary)</i></div>
+    
+    <div id="quiz-container"></div>
+
+    <div class="controls" id="controls">
+        <button class="check-btn" id="check-btn">Check Answers</button>
+    </div>
+
+    <div class="result-area" id="result-area">
+        <h3>Test Results</h3>
+        <p id="score-text"></p>
+        <button class="restart-btn" onclick="location.reload()">Take Test Again</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // --- GRAMMAR ---
+        {
+            text: "Look at those black clouds! It <span class='blank'>___</span> rain soon.",
+            options: ["is going to", "will", "is raining"],
+            correct: 0 // is going to (предсказание на основе очевидного)
+        },
+        {
+            text: "I <span class='blank'>___</span> my flight tomorrow at 6 AM. I've already checked in.",
+            options: ["am going to take", "am taking", "will take"],
+            correct: 1 // am taking (договоренность, есть точное время)
+        },
+        {
+            text: "A: I can't find my passport!<br>B: Don't worry, I <span class='blank'>___</span> help you look for it.",
+            options: ["am going to", "will", "am helping"],
+            correct: 1 // will (спонтанное решение в момент речи)
+        },
+        {
+            text: "We <span class='blank'>___</span> visit a travel agency next week to book our trip.",
+            options: ["are going to", "is going to", "going to"],
+            correct: 0 // are going to (план)
+        },
+        {
+            text: "The train to the airport <span class='blank'>___</span> at 7:30 PM sharp.",
+            options: ["is going to leave", "will leave", "leaves"],
+            correct: 2 // leaves (расписание)
+        },
+        {
+            text: "Where <span class='blank'>___</span> you going to stay during your trip to London?",
+            options: ["are", "do", "will"],
+            correct: 0 // are (вопрос с be going to)
+        },
+
+        // --- VOCABULARY ---
+        {
+            text: "Before the flight, you need to go to the check-in desk and drop off your <span class='blank'>___</span>.",
+            options: ["souvenir", "luggage", "passport"],
+            correct: 1 // luggage
+        },
+        {
+            text: "A person who travels in a plane, bus, or train but is not the driver is called a <span class='blank'>___</span>.",
+            options: ["tour guide", "passenger", "travel agent"],
+            correct: 1 // passenger
+        },
+        {
+            text: "We bought a <span class='blank'>___</span> because it was cheaper to pay for the flight and hotel together.",
+            options: ["package holiday", "sightseeing tour", "ticket"],
+            correct: 0 // package holiday
+        },
+        {
+            text: "If you want to visit the museum, you should <span class='blank'>___</span> tickets online in advance.",
+            options: ["book", "go", "make"],
+            correct: 0 // book
+        },
+        {
+            text: "The <span class='blank'>___</span> showed us around the old city and told us its history.",
+            options: ["passenger", "tour guide", "travel agency"],
+            correct: 1 // tour guide
+        },
+        {
+            text: "I bought a small Eiffel Tower as a <span class='blank'>___</span> to remember my trip to Paris.",
+            options: ["souvenir", "ticket", "passport"],
+            correct: 0 // souvenir
+        }
+    ];
+
+    let score = 0;
+    let answeredCount = 0;
+    const totalQuestions = questions.length;
+    const userAnswers = new Array(totalQuestions).fill(null); // Храним выбранные индексы
+
+    const quizContainer = document.getElementById('quiz-container');
+    const checkBtn = document.getElementById('check-btn');
+    const controls = document.getElementById('controls');
+    const resultArea = document.getElementById('result-area');
+    const scoreText = document.getElementById('score-text');
+
+    // Рендер теста
+    questions.forEach((q, qIndex) => {
+        const qBox = document.createElement('div');
+        qBox.className = 'question-box';
+        
+        const qText = document.createElement('div');
+        qText.className = 'question-text';
+        qText.innerHTML = `<strong>${qIndex + 1}.</strong> ${q.text}`;
+        qBox.appendChild(qText);
+        
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options';
+        
+        q.options.forEach((opt, optIndex) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(qIndex, optIndex, btn, optionsDiv);
+            optionsDiv.appendChild(btn);
+        });
+        
+        qBox.appendChild(optionsDiv);
+        quizContainer.appendChild(qBox);
+    });
+
+    function selectOption(qIndex, optIndex, selectedBtn, parentDiv) {
+        // Если уже отвечали на этот вопрос (после проверки) - игнорируем
+        if (checkBtn.disabled) return;
+
+        // Убираем выделение с других кнопок этого вопроса
+        const allBtns = parentDiv.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.style.borderColor = '#bdc3c7');
+        
+        // Выделяем выбранную
+        selectedBtn.style.borderColor = 'var(--accent)';
+        selectedBtn.style.background = '#f0f7fd';
+        
+        userAnswers[qIndex] = optIndex;
+
+        // Проверяем, ответили ли на все вопросы
+        answeredCount = userAnswers.filter(ans => ans !== null).length;
+        if (answeredCount === totalQuestions) {
+            checkBtn.style.opacity = '1';
+            checkBtn.style.cursor = 'pointer';
+        }
+    }
+
+    // Изначально кнопка проверки неактивна (полупрозрачна), пока не ответят на все
+    checkBtn.style.opacity = '0.5';
+    checkBtn.style.cursor = 'not-allowed';
+
+    checkBtn.addEventListener('click', () => {
+        if (answeredCount < totalQuestions) {
+            alert("Please answer all questions before checking.");
+            return;
+        }
+
+        score = 0;
+        checkBtn.disabled = true;
+        checkBtn.style.opacity = '0.5';
+        checkBtn.style.cursor = 'not-allowed';
+
+        const qBoxes = document.querySelectorAll('.question-box');
+
+        questions.forEach((q, qIndex) => {
+            const optionsDiv = qBoxes[qIndex].querySelector('.options');
+            const allBtns = optionsDiv.querySelectorAll('.option-btn');
+            const userAns = userAnswers[qIndex];
+            
+            // Подсвечиваем правильный ответ
+            allBtns[q.correct].classList.add('correct');
+            
+            // Если пользователь ошибся, подсвечиваем его выбор красным
+            if (userAns !== q.correct) {
+                allBtns[userAns].classList.add('wrong');
+            } else {
+                score++;
+            }
+
+            // Блокируем кнопки
+            allBtns.forEach(btn => {
+                btn.disabled = true;
+                btn.style.borderColor = ''; // сбрасываем инлайн-стили выделения
+                btn.style.background = '';
+            });
+        });
+
+        // Показываем результаты
+        controls.style.display = 'none';
+        resultArea.style.display = 'block';
+        
+        let message = "";
+        const percentage = (score / totalQuestions) * 100;
+        
+        if (percentage === 100) message = "Perfect score! You are ready for your trip. 🏆";
+        else if (percentage >= 75) message = "Great job! You have a solid understanding. 🌟";
+        else if (percentage >= 50) message = "Good effort. Review the grammar rules and travel words. 📚";
+        else message = "Don't worry, practice makes perfect. Review the material and try again! 💪";
+        
+        scoreText.innerHTML = `You got <strong>${score} out of ${totalQuestions}</strong> correct.<br><br>${message}`;
+    });
+</script>
+</body>
+</html>
